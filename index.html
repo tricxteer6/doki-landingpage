@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    if (location.protocol === 'file:') {
+      location.replace('http://localhost:3001/');
+    }
+  </script>
+  <title>Dokinesia — Urus Dokumen Kilat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            doki: {
+              orange: '#FF914D',
+              dark: '#E07830',
+              light: '#FFF5EE',
+              accent: '#ffffff',
+            },
+          },
+          fontFamily: {
+            sans: ['Calibri', 'Segoe UI', 'Candara', 'sans-serif'],
+            display: ['Poppins', 'Calibri', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .hero-overlay {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.45) 100%);
+    }
+    #mobile-menu.open { transform: translateX(0); }
+    #hero-carousel-bg { overflow: hidden; }
+    #carousel-track { transition: transform 0.6s ease-in-out; }
+    .carousel-slide { min-width: 100%; height: 100%; flex-shrink: 0; }
+    .layanan-modal-body {
+      scrollbar-width: thin;
+      scrollbar-color: #FF914D transparent;
+    }
+    .layanan-modal-body::-webkit-scrollbar { width: 6px; }
+    .layanan-modal-body::-webkit-scrollbar-thumb {
+      background: #FF914D;
+      border-radius: 999px;
+    }
+    @media (min-width: 768px) {
+      #navbar-wrapper.navbar-hidden { transform: translateY(-100%); }
+      #navbar-hover-zone { opacity: 0; pointer-events: none; }
+      #navbar-wrapper.navbar-hidden + #navbar-hover-zone { opacity: 1; pointer-events: auto; }
+    }
+  </style>
+</head>
+<body class="font-sans text-gray-800 antialiased">
+
+  <!-- Navbar (desktop: sembunyi saat scroll ke bawah, muncul di atas & saat hover) -->
+  <div id="navbar-wrapper" class="relative md:fixed md:top-0 md:left-0 md:right-0 md:z-50 md:transition-transform md:duration-500 md:ease-in-out">
+  <!-- Top Bar -->
+  <div class="bg-doki-dark text-white text-xs sm:text-sm">
+    <div class="max-w-6xl mx-auto px-4 py-2 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2 text-center sm:text-left">
+      <span class="font-semibold tracking-wide">Urus Dokumen BMI</span>
+      <div class="flex flex-col sm:flex-row gap-1 sm:gap-4">
+        <a href="mailto:urusdoki@gmail.com" class="hover:text-doki-accent transition break-all">urusdoki@gmail.com</a>
+        <a href="tel:081258880677" class="hover:text-doki-accent transition">0812-5888-0677</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <header class="bg-white shadow-sm md:shadow-md">
+    <nav class="max-w-6xl mx-auto px-4 py-3 sm:py-4 flex justify-between items-center">
+      <a href="#" class="flex items-center gap-2 min-w-0">
+        <div id="site-logo" class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-full bg-doki-orange flex items-center justify-center overflow-hidden">
+          <span id="site-logo-fallback" class="text-white font-bold text-base sm:text-lg">D</span>
+          <img id="site-logo-img" src="" alt="Dokinesia" class="hidden w-full h-full object-cover" />
+        </div>
+        <div class="min-w-0">
+          <span class="font-bold text-doki-dark text-base sm:text-lg leading-tight block truncate">Dokinesia</span>
+          <span class="text-xs text-gray-500">Urus Dokumen Kilat</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <ul class="hidden md:flex gap-4 lg:gap-6 text-sm font-medium text-gray-600">
+        <li><a href="#tentang" class="hover:text-doki-orange transition">Tentang Kami</a></li>
+        <li><a href="#kenapa" class="hover:text-doki-orange transition">Kenapa Kami</a></li>
+        <li><a href="#layanan" class="hover:text-doki-orange transition">Layanan</a></li>
+        <li><a href="#testimonial" class="hover:text-doki-orange transition">Testimonial</a></li>
+        <li><a href="#kontak" class="hover:text-doki-orange transition">Hubungi Kami</a></li>
+      </ul>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-btn" type="button" aria-label="Open menu"
+        class="md:hidden p-2 rounded-lg text-doki-dark hover:bg-doki-light transition">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  </div>
+  <!-- Zona hover atas untuk memunculkan navbar (desktop) -->
+  <div id="navbar-hover-zone" class="hidden md:block fixed top-0 left-0 right-0 h-8 z-[60]" aria-hidden="true"></div>
+  <div id="navbar-spacer" class="hidden md:block h-[104px]" aria-hidden="true"></div>
+
+  <!-- Mobile Menu Drawer -->
+  <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/40 z-50 hidden md:hidden"></div>
+  <aside id="mobile-menu" class="fixed top-0 right-0 h-full w-72 max-w-[85vw] bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 md:hidden">
+    <div class="flex justify-between items-center p-4 border-b border-gray-100">
+      <span class="font-bold text-doki-dark">Menu</span>
+      <button id="mobile-menu-close" type="button" aria-label="Close menu" class="p-2 rounded-lg hover:bg-doki-light">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <ul class="p-4 space-y-1 text-sm font-medium text-gray-700">
+      <li><a href="#tentang" class="mobile-nav-link block px-4 py-3 rounded-lg hover:bg-doki-light hover:text-doki-orange transition">Tentang Kami</a></li>
+      <li><a href="#kenapa" class="mobile-nav-link block px-4 py-3 rounded-lg hover:bg-doki-light hover:text-doki-orange transition">Kenapa Kami</a></li>
+      <li><a href="#layanan" class="mobile-nav-link block px-4 py-3 rounded-lg hover:bg-doki-light hover:text-doki-orange transition">Layanan</a></li>
+      <li><a href="#testimonial" class="mobile-nav-link block px-4 py-3 rounded-lg hover:bg-doki-light hover:text-doki-orange transition">Testimonial</a></li>
+      <li><a href="#kontak" class="mobile-nav-link block px-4 py-3 rounded-lg hover:bg-doki-light hover:text-doki-orange transition">Hubungi Kami</a></li>
+    </ul>
+  </aside>
+
+  <!-- Hero Section (Dynamic text + carousel background) -->
+  <section id="hero-section" class="relative min-h-[420px] sm:min-h-[480px] md:min-h-[520px] flex items-center overflow-hidden bg-black">
+    <!-- Carousel background images -->
+    <div id="hero-carousel-bg" class="absolute inset-0 z-0 hidden">
+      <div id="carousel-track" class="flex h-full w-full"></div>
+    </div>
+    <!-- Static fallback when no carousel -->
+    <div id="hero-static-bg" class="absolute inset-0 z-0 bg-black bg-cover bg-center"></div>
+    <div class="hero-overlay absolute inset-0 z-[1]"></div>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-4 py-12 sm:py-16 md:py-20 text-center text-white w-full">
+      <p class="text-doki-accent font-semibold tracking-widest uppercase text-xs sm:text-sm mb-3 sm:mb-4">Urus Dokumen Kilat</p>
+      <h1 id="hero-title" class="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight px-2"></h1>
+      <p id="hero-subtitle" class="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto mb-6 sm:mb-8 px-2"></p>
+      <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4 px-4">
+        <a href="#kontak" class="w-full sm:w-auto bg-white hover:bg-doki-light text-doki-dark font-semibold px-8 py-3 rounded-full transition">Hubungi Kami</a>
+        <a href="#layanan" class="w-full sm:w-auto border-2 border-white hover:bg-white hover:text-doki-orange font-semibold px-8 py-3 rounded-full transition">Layanan Kami</a>
+      </div>
+    </div>
+
+    <!-- Carousel dot indicators -->
+    <div id="carousel-dots" class="absolute bottom-4 sm:bottom-6 left-0 right-0 flex justify-center gap-2 z-10 hidden"></div>
+  </section>
+
+  <!-- Tentang Kami -->
+  <section id="tentang" class="py-12 sm:py-16 md:py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <span class="text-doki-orange font-semibold text-sm uppercase tracking-widest">Tentang Kami</span>
+        <h2 class="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-doki-dark mt-2">Tentang Kami</h2>
+      </div>
+      <div class="max-w-4xl mx-auto text-center text-gray-600 leading-relaxed space-y-4">
+        <p>
+          Dokinesia (Dokumen Kilat Indonesia) adalah penyedia layanan pengurusan dokumen pernikahan lintas negara,
+          khususnya antara WNI dan WNA Taiwan, sejak tahun 2003.
+        </p>
+        <p>
+          Dengan pengalaman lebih dari 20 tahun, kami memahami tantangan yang sering dihadapi pasangan lintas negara
+          seperti perbedaan hukum, prosedur yang rumit, dan kendala bahasa.
+        </p>
+        <p>
+          Kami hadir sebagai pendamping profesional yang komunikatif dan solutif. Ditangani oleh tim berpengalaman
+          dan fasih dalam Bahasa Indonesia &amp; Mandarin, seluruh proses berjalan cepat, aman, dan sesuai hukum
+          Indonesia dan Taiwan.
+        </p>
+        <blockquote class="text-doki-orange font-semibold text-lg italic pt-4">
+          "Dokinesia Solusi Mudah untuk Pernikahan Tanpa Ribet. Duduk Manis, Terima Beres!"
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kenapa Harus Kami -->
+  <section id="kenapa" class="py-12 sm:py-16 md:py-20 bg-doki-light">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <span class="text-doki-orange font-semibold text-sm uppercase tracking-widest">Urus Dokumen Kilat</span>
+        <h2 class="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-doki-dark mt-2">KENAPA HARUS KAMI?</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition text-center">
+          <div class="w-14 h-14 bg-doki-orange/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-doki-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="font-bold text-doki-dark mb-2">Fast Respon</h3>
+          <p class="text-sm text-gray-600">Respon cepat didukung berbagai layanan chat seperti Line, Whatsapp, Email, Live Chat &amp; Telp.</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition text-center">
+          <div class="w-14 h-14 bg-doki-orange/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-doki-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <h3 class="font-bold text-doki-dark mb-2">CRM Sistem</h3>
+          <p class="text-sm text-gray-600">Informasi terintegrasi mengenai progress pengurusan dokumen, transaksi pembayaran, dan privasi dokumen yang terjamin.</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition text-center">
+          <div class="w-14 h-14 bg-doki-orange/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-doki-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          </div>
+          <h3 class="font-bold text-doki-dark mb-2">Komunikatif &amp; Solutif</h3>
+          <p class="text-sm text-gray-600">Kami memberikan solusi terbaik dalam harga dan kondisi dokumen yang diurus.</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition text-center">
+          <div class="w-14 h-14 bg-doki-orange/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-doki-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+          </div>
+          <h3 class="font-bold text-doki-dark mb-2">Prioritas Kepuasan Pelanggan</h3>
+          <p class="text-sm text-gray-600">Kami berkomitmen memberikan pelayanan terbaik untuk kepuasan pelanggan dalam setiap layanan kami.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Layanan / Events (Dynamic) -->
+  <section id="layanan" class="py-12 sm:py-16 md:py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <span class="text-doki-orange font-semibold text-sm uppercase tracking-widest">Urus Dokumen Kilat</span>
+        <h2 class="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-doki-dark mt-2">Layanan Kami</h2>
+      </div>
+      <div id="events-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <!-- Events injected by app.js -->
+      </div>
+      <div id="events-loading" class="text-center text-gray-500 py-8 hidden">Memuat layanan...</div>
+      <div id="events-empty" class="text-center text-gray-400 py-8 hidden">Belum ada layanan tersedia.</div>
+    </div>
+  </section>
+
+  <!-- Modal Detail Layanan -->
+  <div id="layanan-modal" class="fixed inset-0 z-[70] hidden" role="dialog" aria-modal="true" aria-labelledby="layanan-modal-title">
+    <div class="absolute inset-0 bg-black/60" id="layanan-modal-backdrop"></div>
+    <div class="absolute inset-0 flex items-end sm:items-center justify-center p-0 sm:p-6">
+      <div class="layanan-modal-panel bg-white w-full sm:max-w-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[92dvh] sm:max-h-[min(85vh,640px)] overflow-hidden relative">
+        <button type="button" id="layanan-modal-close" aria-label="Tutup"
+          class="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-white/95 hover:bg-white text-gray-700 shadow-md flex items-center justify-center transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div id="layanan-modal-image-wrap" class="relative shrink-0 w-full h-[200px] sm:h-[240px] bg-doki-light overflow-hidden sm:rounded-t-2xl">
+          <img id="layanan-modal-image" src="" alt="" class="w-full h-full object-cover object-center hidden" />
+          <div id="layanan-modal-image-placeholder" class="w-full h-full flex items-center justify-center">
+            <svg class="w-16 h-16 text-doki-orange/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+        </div>
+        <div class="layanan-modal-body flex-1 min-h-0 overflow-y-auto overscroll-contain p-5 sm:p-8 pt-4 sm:pt-6">
+          <time id="layanan-modal-date" class="text-xs text-doki-orange font-semibold uppercase tracking-wide"></time>
+          <h3 id="layanan-modal-title" class="font-display text-xl sm:text-2xl font-bold text-doki-dark mt-2 mb-3"></h3>
+          <p id="layanan-modal-desc" class="text-gray-600 text-sm sm:text-base leading-relaxed whitespace-pre-line"></p>
+          <a href="#kontak" id="layanan-modal-cta"
+            class="mt-5 sm:mt-6 inline-flex items-center justify-center w-full sm:w-auto bg-doki-orange hover:bg-doki-dark text-white font-semibold px-6 py-3 rounded-lg transition">
+            Konsultasi Layanan Ini
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonial -->
+  <section id="testimonial" class="py-12 sm:py-16 md:py-20 bg-doki-dark text-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="font-display text-2xl sm:text-3xl md:text-4xl font-bold">Testimonial</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div class="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
+          <h3 class="font-bold text-doki-accent">Mr.Liu &amp; Axiao</h3>
+          <p class="text-sm text-white/70 mb-3">Taoyuan - Singkawang</p>
+          <p class="text-sm text-white/90">Layak dikasih jempol karena harga pengurusan masuk akal dan memberikan pelayanan yang baik, great!</p>
+        </div>
+        <div class="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
+          <h3 class="font-bold text-doki-accent">Mr. Yen &amp; Vita</h3>
+          <p class="text-sm text-white/70 mb-3">Taipe - Kalbar</p>
+          <p class="text-sm text-white/90">Service DOKI mantapp dari penjemputan, proses dokumen nikah, interview, sampai visa kelar. Thanks DOKI!</p>
+        </div>
+        <div class="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
+          <h3 class="font-bold text-doki-accent">Miss Amy</h3>
+          <p class="text-sm text-white/70 mb-3">Cung Li - Pengurusan visa kunjungan</p>
+          <p class="text-sm text-white/90">Pelayanan Doki cepat dan ramah, fast respond dalam pelayanan. Proses visa kunjungan keluarga ke Taiwan tidak pake lama. Keren Doki!</p>
+        </div>
+        <div class="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
+          <h3 class="font-bold text-doki-accent">Mr.Chen &amp; Ita</h3>
+          <p class="text-sm text-white/70 mb-3">Taoyuan - Subang</p>
+          <p class="text-sm text-white/90">Pengurusan dokumen nikah lewat jasa DOKI semua berjalan lancar. DOKI mantap.</p>
+        </div>
+        <div class="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
+          <h3 class="font-bold text-doki-accent">Mr Peng &amp; Ita</h3>
+          <p class="text-sm text-white/70 mb-3">Miaoli - Indramayu</p>
+          <p class="text-sm text-white/90">DOKI mantap banget pengurusan pernikahan kami, mulai dari awal pengurusan leges dokumen interview dan visa nikah selesai.</p>
+        </div>
+        <div class="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
+          <h3 class="font-bold text-doki-accent">Mr. Huang &amp; Titis</h3>
+          <p class="text-sm text-white/70 mb-3">Taipe - Banyuwangi</p>
+          <p class="text-sm text-white/90">Doki memberikan pelayanan ok banget, fast respond, komitmen dalam pengurusan dokumen tanpa biaya tambahan. Mantap Doki!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hubungi Kami -->
+  <section id="kontak" class="py-12 sm:py-16 md:py-20 bg-doki-light">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-doki-dark">Hubungi Kami</h2>
+      </div>
+      <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-5 sm:p-8">
+        <form id="kontak-form" class="space-y-4" onsubmit="event.preventDefault();">
+          <div>
+            <label for="kontak-nama" class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+            <input type="text" id="kontak-nama" required
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-doki-orange focus:border-transparent outline-none"
+              placeholder="Nama Anda" />
+          </div>
+          <div>
+            <label for="kontak-pesan" class="block text-sm font-medium text-gray-700 mb-1">Pesan</label>
+            <textarea id="kontak-pesan" rows="4" required
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-doki-orange focus:border-transparent outline-none"
+              placeholder="Tulis pesan Anda..."></textarea>
+          </div>
+          <button type="button" id="btn-whatsapp"
+            class="flex items-center justify-center gap-2 w-full bg-doki-orange hover:bg-doki-dark text-white font-semibold py-3 rounded-lg transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.532 5.955L0 24l6.222-1.63C7.96 23.442 9.92 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+            Kirim Whatsapp
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-doki-dark text-white py-8 sm:py-10">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h3 class="font-display text-base sm:text-lg md:text-xl font-bold mb-2 leading-snug">PENGURUSAN DOKUMEN NIKAH TAIWAN - INDONESIA</h3>
+      <p class="text-white/70 text-sm max-w-2xl mx-auto">
+        Ruko Casa De Parco Jl. Damai Foresta No. 20 Sampora, Cisauk,<br />
+        Tangerang Regency, Banten 15345
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-4 text-sm text-white/80">
+        <a href="mailto:urusdoki@gmail.com" class="hover:text-doki-accent transition">urusdoki@gmail.com</a>
+        <span>|</span>
+        <a href="tel:081258880677" class="hover:text-doki-accent transition">0812-5888-0677</a>
+      </div>
+      <p class="mt-6 text-xs text-white/50">&copy; 2024 Dokinesia. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="api-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
