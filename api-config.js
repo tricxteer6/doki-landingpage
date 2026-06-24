@@ -24,3 +24,4 @@ function resolveApi() {
 const api = resolveApi();
 const API_ORIGIN = api.origin;
 const API_BASE_URL = api.base;
+const UPLOADS_ORIGIN = stripTrailingSlash(cfg.uploadsUrl || api.origin);
